@@ -1,6 +1,39 @@
 #!/bin/sh
 set -e
 
+# Create .env file from environment variables if it does not exist
+if [ ! -f ".env" ]; then
+    echo "No .env file found — creating one from environment variables..."
+    cat > .env <<EOF
+APP_NAME="${APP_NAME:-Boholympics 2026}"
+APP_ENV=${APP_ENV:-production}
+APP_KEY=${APP_KEY:-}
+APP_DEBUG=${APP_DEBUG:-false}
+APP_URL=${APP_URL:-${RAILWAY_PUBLIC_DOMAIN:+https://${RAILWAY_PUBLIC_DOMAIN}}}
+
+LOG_CHANNEL=${LOG_CHANNEL:-stack}
+LOG_LEVEL=${LOG_LEVEL:-error}
+
+DB_CONNECTION=${DB_CONNECTION:-mysql}
+DB_HOST=${DB_HOST:-127.0.0.1}
+DB_PORT=${DB_PORT:-3306}
+DB_DATABASE=${DB_DATABASE:-boholympics}
+DB_USERNAME=${DB_USERNAME:-root}
+DB_PASSWORD=${DB_PASSWORD:-}
+
+SESSION_DRIVER=${SESSION_DRIVER:-file}
+CACHE_STORE=${CACHE_STORE:-file}
+QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
+
+REDIS_HOST=${REDIS_HOST:-127.0.0.1}
+REDIS_PORT=${REDIS_PORT:-6379}
+
+VITE_APP_NAME="${VITE_APP_NAME:-${APP_NAME:-Boholympics 2026}}"
+EOF
+    chmod 644 .env
+    echo ".env file created."
+fi
+
 # Generate APP_KEY if not set
 if [ -z "$APP_KEY" ]; then
     echo "APP_KEY is not set — generating one now..."

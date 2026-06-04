@@ -45,12 +45,8 @@ WORKDIR /var/www/html
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         default-mysql-client \
-        libicu-dev \
-        libonig-dev \
-        libpng-dev \
-        libxml2-dev \
-        libzip-dev \
-        unzip \
+        nginx \
+        supervisor \
     && docker-php-ext-install \
         bcmath \
         intl \
@@ -67,14 +63,13 @@ RUN apt-get update \
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/boholympics.ini
-COPY docker/start.sh /usr/local/bin/start.sh
-COPY --from=vendor /app /var/www/html
-COPY --from=assets /app/public/build /var/www/html/public/build
+COPY docker/nginx/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf \
-    && sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R ug+rw storage bootstrap/cache \
-    && chmod +x /usr/local/bin/start.sh
+COPY . .
 
-CMD ["/usr/local/bin/start.sh"]
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

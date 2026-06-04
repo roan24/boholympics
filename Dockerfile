@@ -67,12 +67,14 @@ RUN apt-get update \
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/boholympics.ini
+COPY docker/start.sh /usr/local/bin/start.sh
 COPY --from=vendor /app /var/www/html
 COPY --from=assets /app/public/build /var/www/html/public/build
 
 RUN sed -ri -e "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf \
     && sed -ri -e "s!/var/www/!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
     && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R ug+rw storage bootstrap/cache
+    && chmod -R ug+rw storage bootstrap/cache \
+    && chmod +x /usr/local/bin/start.sh
 
-CMD ["sh", "-c", "rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf && a2enmod -q mpm_prefork && sed -i \"s/Listen 80/Listen ${PORT:-8080}/\" /etc/apache2/ports.conf && sed -i \"s/:80/:${PORT:-8080}/\" /etc/apache2/sites-available/000-default.conf && apache2-foreground"]
+CMD ["/usr/local/bin/start.sh"]

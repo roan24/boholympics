@@ -8,12 +8,19 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#eef6ff',
-          100: '#d9ebff',
-          500: '#1d67d2',
-          600: '#1756b6',
-          700: '#123f8a',
-          900: '#0b2454',
+          50: '#eef4ff',
+          100: '#dbe6ff',
+          500: '#3657b3',
+          600: '#2b4899',
+          700: '#213975',
+          900: '#13224d',
+        },
+        accent: {
+          50: '#fff3ed',
+          100: '#ffe0d3',
+          500: '#e37e2d',
+          600: '#c8671f',
+          700: '#a8511a',
         },
         medal: {
           gold: '#d89b21',
@@ -22,10 +29,11 @@ export default {
         },
       },
       boxShadow: {
-        soft: '0 14px 40px rgba(15, 35, 70, 0.08)',
+        soft: '0 14px 40px rgba(19, 34, 77, 0.10)',
+        lift: '0 20px 60px rgba(54, 87, 179, 0.16)',
       },
       fontFamily: {
-        sans: ['Aptos', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Netflix Sans', 'Aptos', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },

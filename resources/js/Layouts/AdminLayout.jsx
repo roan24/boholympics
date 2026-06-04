@@ -18,17 +18,20 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-slate-100 lg:flex">
-      <aside className="border-r border-slate-200 bg-primary-900 text-white lg:fixed lg:inset-y-0 lg:w-72">
-        <div className="flex items-center gap-3 px-5 py-5">
-          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white text-primary-800"><Trophy size={23} /></div>
-          <div>
-            <div className="font-black">Boholympics</div>
-            <div className="text-xs font-semibold text-primary-100">Admin Console</div>
+      <aside className="border-r border-primary-900 bg-primary-900 text-white lg:fixed lg:inset-y-0 lg:w-72">
+        <div className="px-5 py-5">
+          <img src="/assets/boholympics-2026-logo.png" alt="Boholympics 2026" className="boholympics-logo h-14 w-auto max-w-full object-contain" />
+          <div className="mt-3 flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white text-primary-800"><Trophy size={20} /></div>
+            <div>
+              <div className="font-black">Boholympics</div>
+              <div className="text-xs font-semibold text-primary-100">Admin Console</div>
+            </div>
           </div>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-4 lg:block lg:space-y-1">
           {nav.map(([href, label, Icon]) => (
-            <Link key={href} href={href} className={`flex min-w-fit items-center gap-3 rounded-md px-3 py-2 text-sm font-bold ${url.startsWith(href) ? 'bg-white text-primary-900' : 'text-primary-50 hover:bg-primary-700'}`}>
+            <Link key={href} href={href} className={`flex min-w-fit items-center gap-3 rounded-md px-3 py-2 text-sm font-bold transition ${url.startsWith(href) ? 'bg-white text-primary-900' : 'text-primary-50 hover:bg-primary-700'}`}>
               <Icon size={17} /> {label}
             </Link>
           ))}

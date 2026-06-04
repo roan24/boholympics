@@ -4,8 +4,82 @@
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: 'Netflix Sans', Aptos, ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(227, 126, 45, 0.12), transparent 28rem),
+    linear-gradient(180deg, #f8fbff 0%, #f1f5fb 44%, #f8fafc 100%);
 }
 
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+.boholympics-logo {
+  filter: drop-shadow(0 10px 18px rgba(19, 34, 77, 0.16));
+}
+
+.olympic-grid {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.12) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(255, 255, 255, 0.10) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%);
+  background-position: 18px 0, 18px 0, 0 0, 0 0;
+  background-size: 36px 36px;
+}
+
+.bg-competition-grid {
+  background-image:
+    repeating-linear-gradient(0deg, #fff 0, #fff 1px, transparent 1px, transparent 48px),
+    repeating-linear-gradient(90deg, #fff 0, #fff 1px, transparent 1px, transparent 48px);
+}
+
+.ticker-track {
+  animation: ticker-scroll 24s linear infinite;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.hero-parallax-art {
+  animation: hero-parallax-art 14s ease-in-out infinite alternate;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.hero-parallax-grid {
+  animation: hero-parallax-grid 18s linear infinite;
+  will-change: background-position;
+}
+
+@keyframes hero-parallax-art {
+  from {
+    transform: translate3d(0, -6px, 0);
+  }
+  to {
+    transform: translate3d(0, 6px, 0);
+  }
+}
+
+@keyframes hero-parallax-grid {
+  from {
+    background-position: 18px 0, 18px 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 54px 36px, 54px 36px, 36px 36px, 36px 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-parallax-art,
+  .hero-parallax-grid,
+  .ticker-track {
+    animation: none;
+  }
 }

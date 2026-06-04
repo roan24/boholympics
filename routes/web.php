@@ -37,5 +37,6 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('/schedules', AdminScheduleController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('/results', ResultController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('/medal-tally', AdminMedalTallyController::class)->name('medal-tally');
+    Route::post('/medal-tally/import', [AdminMedalTallyController::class, 'import'])->name('medal-tally.import');
     Route::resource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
 });

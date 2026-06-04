@@ -10,8 +10,8 @@ export default function MedalTallyTable({ tally = [] }) {
   return (
     <Card className="overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
-          <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+        <table className="min-w-full divide-y divide-primary-100 text-sm">
+          <thead className="bg-primary-50/70 text-left text-xs uppercase tracking-wide text-primary-700">
             <tr>
               <th className="px-4 py-3">Rank</th>
               <th className="px-4 py-3">Municipality</th>
@@ -21,13 +21,13 @@ export default function MedalTallyTable({ tally = [] }) {
               <th className="px-4 py-3 text-center">Total</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+          <tbody className="divide-y divide-primary-50 bg-white">
             {tally.map((row) => (
-              <tr key={row.id} className="hover:bg-primary-50/40">
-                <td className="px-4 py-4 font-bold text-primary-700">#{row.rank}</td>
+              <tr key={row.id} className="transition hover:bg-primary-50/50">
+                <td className="px-4 py-4 font-bold text-accent-600">#{row.rank}</td>
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 font-bold text-primary-700">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 font-bold text-primary-700 ring-2 ring-white">
                       {row.logo ? <img src={row.logo} alt="" className="h-9 w-9 rounded-full object-cover" /> : row.name.charAt(0)}
                     </div>
                     <span className="font-semibold text-slate-900">{row.name}</span>

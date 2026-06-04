@@ -11,10 +11,17 @@ fi
 # Create .env file from environment variables if it does not exist
 if [ ! -f ".env" ]; then
     echo "No .env file found — creating one from environment variables..."
+
+    # Strip any existing prefix then re-apply it, so APP_KEY always has exactly
+    # one "base64:" prefix regardless of whether the variable was supplied with
+    # or without it, or was generated above.
+    APP_KEY_RAW="${APP_KEY#base64:}"
+    APP_KEY_FULL="base64:${APP_KEY_RAW}"
+
     cat > .env <<EOF
 APP_NAME="${APP_NAME:-Boholympics 2026}"
 APP_ENV=${APP_ENV:-production}
-APP_KEY=${APP_KEY}
+APP_KEY=${APP_KEY_FULL}
 APP_DEBUG=${APP_DEBUG:-false}
 APP_URL=${APP_URL:-${RAILWAY_PUBLIC_DOMAIN:+https://${RAILWAY_PUBLIC_DOMAIN}}}
 

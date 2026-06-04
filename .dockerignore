@@ -2,6 +2,7 @@
 node_modules
 vendor
 public/build
+public/hot
 storage/logs/*
 .env
 .DS_Store

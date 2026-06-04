@@ -12,6 +12,8 @@ RUN apt-get update \
         libonig-dev \
         libxml2-dev \
         default-mysql-client \
+        nginx \
+        supervisor \
     && docker-php-ext-install \
         bcmath \
         intl \
@@ -25,5 +27,13 @@ RUN apt-get update \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/boholympics.ini
+COPY docker/nginx/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-CMD ["php-fpm"]
+COPY . .
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

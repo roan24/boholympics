@@ -45,6 +45,11 @@ WORKDIR /var/www/html
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         default-mysql-client \
+        libicu-dev \
+        libonig-dev \
+        libpng-dev \
+        libxml2-dev \
+        libzip-dev \
         nginx \
         supervisor \
     && docker-php-ext-install \

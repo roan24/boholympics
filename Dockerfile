@@ -45,8 +45,11 @@ WORKDIR /var/www/html
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         default-mysql-client \
-        nginx \
-        supervisor \
+        libicu-dev \
+        libonig-dev \
+        libpng-dev \
+        libxml2-dev \
+        libzip-dev \
     && docker-php-ext-install \
         bcmath \
         intl \
@@ -54,22 +57,26 @@ RUN apt-get update \
         opcache \
         pdo_mysql \
         zip \
-    && rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf \
-        /etc/apache2/mods-enabled/mpm_worker.load /etc/apache2/mods-enabled/mpm_worker.conf \
-    && a2enmod mpm_prefork rewrite headers \
+    && a2enmod rewrite headers \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-COPY docker/php/php.ini /usr/local/etc/php/conf.d/boholympics.ini
-COPY docker/nginx/nginx.conf /etc/nginx/sites-available/default
-COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+        /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' \
+        /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/boholympics.ini
+
+COPY --from=vendor /app/vendor ./vendor
+COPY --from=assets /app/public/build ./public/build
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
-EXPOSE 80
+EXPOSE 8080
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/usr/local/bin/start.sh"]

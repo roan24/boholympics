@@ -1,0 +1,95 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: boholympics_app
+    working_dir: /var/www/html
+    command: sh -c "composer install && php-fpm"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      COMPOSER_ALLOW_SUPERUSER: "1"
+    networks:
+      - boholympics
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: boholympics_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - boholympics
+
+  mysql:
+    image: mysql:8.0
+    container_name: boholympics_mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: boholympics
+      MYSQL_USER: boholympics_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - boholympics
+
+  node:
+    image: node:22-alpine
+    container_name: boholympics_node
+    working_dir: /var/www/html
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "5174:5174"
+    volumes:
+      - ./:/var/www/html
+      - node_modules:/var/www/html/node_modules
+    environment:
+      VITE_HOST: 0.0.0.0
+      VITE_PORT: 5174
+    networks:
+      - boholympics
+
+  phpmyadmin:
+    image: phpmyadmin:5-apache
+    container_name: boholympics_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - mysql
+    networks:
+      - boholympics
+
+  redis:
+    image: redis:7-alpine
+    container_name: boholympics_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - boholympics
+
+networks:
+  boholympics:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  node_modules:

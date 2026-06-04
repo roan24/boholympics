@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Medal;
+use App\Models\MedalImport;
 use App\Models\Municipality;
 use Illuminate\Support\Collection;
 
@@ -10,6 +11,30 @@ class MedalTallyService
 {
     public function tally(): Collection
     {
+        if (MedalImport::where('status', 'imported')->exists()) {
+            return Medal::query()
+                ->with('municipality')
+                ->get()
+                ->sortBy([
+                    ['gold', 'desc'],
+                    ['silver', 'desc'],
+                    ['bronze', 'desc'],
+                    ['total', 'desc'],
+                    ['municipality.name', 'asc'],
+                ])
+                ->values()
+                ->map(fn ($medal, $index) => [
+                    'rank' => $index + 1,
+                    'id' => $medal->municipality->id,
+                    'name' => $medal->municipality->name,
+                    'logo' => $medal->municipality->logo,
+                    'gold' => $medal->gold,
+                    'silver' => $medal->silver,
+                    'bronze' => $medal->bronze,
+                    'total' => $medal->total,
+                ]);
+        }
+
         return Municipality::query()
             ->withCount([
                 'results as gold' => fn ($query) => $query->where('medal_type', 'gold'),
@@ -40,6 +65,10 @@ class MedalTallyService
 
     public function refreshCache(): void
     {
+        if (MedalImport::where('status', 'imported')->exists()) {
+            return;
+        }
+
         $this->tally()->each(function (array $row) {
             Medal::updateOrCreate(
                 ['municipality_id' => $row['id']],

@@ -19,4 +19,9 @@ class Municipality extends Model
     {
         return $this->hasOne(Medal::class);
     }
+
+    public function sportMedalTallies(): HasMany
+    {
+        return $this->hasMany(SportMedalTally::class);
+    }
 }

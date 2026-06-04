@@ -13,4 +13,9 @@ class Sport extends Model
     {
         return $this->hasMany(Event::class);
     }
+
+    public function medalTallies(): HasMany
+    {
+        return $this->hasMany(SportMedalTally::class);
+    }
 }

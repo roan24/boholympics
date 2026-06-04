@@ -11,9 +11,9 @@ fi
 echo "Running database migrations..."
 php artisan migrate --force
 
-# Seed the database
-echo "Seeding the database..."
-php artisan db:seed --force
+# Seed the database (disabled — seeder hangs on startup; run manually via `php artisan db:seed`)
+# echo "Seeding the database..."
+# php artisan db:seed --force
 
 # Ensure only mpm_prefork is loaded (remove conflicting MPM modules)
 rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_event.conf \
